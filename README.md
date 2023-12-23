@@ -1,3 +1,2 @@
 # todo
-
-A new Flutter project.
+todoアプリを基本として色々な機能を作成してみるためのリポジトリ
