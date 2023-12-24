@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:todo/calender/view/calender_period.dart';
-import 'package:todo/calender/veiw_model/calender_repository.dart';
 import 'package:todo/calender/view/calender_classwork.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // 時間割全体を表すWidget
 class Calendar extends HookConsumerWidget {
@@ -13,7 +13,7 @@ class Calendar extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final deviceHeight = MediaQuery.of(context).size.height;
 
-    const showDebugIcon = false; // ローカルの値を削除するIconの表示の可否
+    const showDebugIcon = true; // ローカルの値を削除するIconの表示の可否
     final clearFlag =
         useState<bool>(false); // SharedPreferencesの値を削除したことを判定するFlag
 
@@ -112,6 +112,7 @@ class BuildListItem extends HookConsumerWidget {
                 // 左の時限用
                 return PeriodWidget(schedulePeriod: scheduleList[index]);
               } else if (index == scheduleList.length) {
+                // 一番下の横線表示用
                 return const Divider(
                   height: 0,
                   thickness: 3,
@@ -119,7 +120,10 @@ class BuildListItem extends HookConsumerWidget {
                 );
               } else {
                 // 授業表示用
-                return const ClassworkWidget();
+                return ClassworkWidget(
+                  schedulePeriod: scheduleList[index],
+                  dayOfWeek: text,
+                );
               }
             },
             separatorBuilder: (BuildContext context, int index) {
@@ -132,4 +136,13 @@ class BuildListItem extends HookConsumerWidget {
             },
             itemCount: scheduleList.length + 1)); // +1することで一番下の横線を表示可能
   }
+}
+
+// SharedPreferences のデータを削除する用
+void clearSharedPreferences(ValueNotifier<bool> clearFlag) async {
+  final prefs = await SharedPreferences.getInstance();
+  prefs.clear();
+
+  // Stateを変更して再描画をトリガー
+  clearFlag.value = !clearFlag.value;
 }

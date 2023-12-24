@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo/route/route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:todo/calender/veiw_model/calender_repository.dart';
+import 'package:todo/calender/veiw_model/period_repository.dart';
 
 final couponAnimationRepogitryProvider =
     Provider<StartTimeRepository>((ref) => StartTimeRepository());
