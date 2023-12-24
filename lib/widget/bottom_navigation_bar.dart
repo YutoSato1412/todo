@@ -19,8 +19,9 @@ class AppNavigationBar extends StatelessWidget {
           child: NavigationBar(
             selectedIndex: navigationShell.currentIndex,
             destinations: const [
-              NavigationDestination(icon: Icon(Icons.home), label: 'page1'),
-              NavigationDestination(icon: Icon(Icons.favorite), label: 'page2'),
+              NavigationDestination(icon: Icon(Icons.list), label: 'todo'),
+              NavigationDestination(
+                  icon: Icon(Icons.calendar_view_month), label: 'calender'),
             ],
             onDestinationSelected: (index) {
               navigationShell.goBranch(

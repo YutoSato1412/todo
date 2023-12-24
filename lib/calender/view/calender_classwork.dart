@@ -56,6 +56,7 @@ class ClassworkWidget extends HookConsumerWidget {
           final enteredData = await showDialog<Map<String, String>>(
             context: context,
             builder: (BuildContext context) {
+              // 授業情報を入力するDialog
               return ClassworkInputDialog(
                 classNameController: classNameController,
                 classPlaceController: classPlaceController,
@@ -102,24 +103,18 @@ class ClassworkWidget extends HookConsumerWidget {
                 classNameState.value ?? '', // Stateの値を表示
                 style: const TextStyle(fontSize: 14),
               ),
-              Container(
-                padding: const EdgeInsets.only(right: 2, left: 2),
-                margin: const EdgeInsets.only(right: 3, left: 3),
-                color: Colors.white,
-                child: Text(
-                  classPlaceState.value ?? '',
-                  style: const TextStyle(fontSize: 11),
+              Offstage(
+                offstage: classNoteState.value == '',
+                child: Container(
+                  padding: const EdgeInsets.only(right: 2, left: 2),
+                  margin: const EdgeInsets.only(right: 3, left: 3),
+                  color: Colors.white,
+                  child: Text(
+                    classNoteState.value ?? '',
+                    style: const TextStyle(fontSize: 11),
+                  ),
                 ),
-              ),
-              Container(
-                padding: const EdgeInsets.only(right: 2, left: 2),
-                margin: const EdgeInsets.only(right: 3, left: 3),
-                color: Colors.white,
-                child: Text(
-                  classNoteState.value ?? '',
-                  style: const TextStyle(fontSize: 11),
-                ),
-              ),
+              )
             ],
           ),
         ),
