@@ -1,24 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:todo/calender/veiw_model/classwork_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:todo/calender/view/calender_classwork_dialog.dart';
 
 class ClassworkWidget extends HookConsumerWidget {
   final String schedulePeriod;
   final String dayOfWeek;
-  final ClassDataRepository classDataRepository = ClassDataRepository();
 
-  ClassworkWidget({
-    super.key,
+  const ClassworkWidget({
+    Key? key,
     required this.schedulePeriod,
     required this.dayOfWeek,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final boxSizeW = MediaQuery.of(context).size.width / 7;
     final boxSizeH = MediaQuery.of(context).size.height * 1.1 / 10;
+    final classNameController = useTextEditingController(text: '');
+    final classPlaceController = useTextEditingController(text: '');
+    final classNoteController = useTextEditingController(text: '');
     final classNameState = useState<String?>('');
     final classPlaceState = useState<String?>('');
     final classNoteState = useState<String?>('');
@@ -28,14 +30,17 @@ class ClassworkWidget extends HookConsumerWidget {
       SharedPreferences.getInstance().then((prefs) {
         final className =
             prefs.getString('class_$dayOfWeek${schedulePeriod}Name') ?? '';
+        classNameController.text = className;
         classNameState.value = className;
 
         final classPlace =
             prefs.getString('class_$dayOfWeek${schedulePeriod}Place') ?? '';
+        classPlaceController.text = classPlace;
         classPlaceState.value = classPlace;
 
         final classNote =
             prefs.getString('class_$dayOfWeek${schedulePeriod}Note') ?? '';
+        classNoteController.text = classNote;
         classNoteState.value = classNote;
       });
       return null;
@@ -51,78 +56,10 @@ class ClassworkWidget extends HookConsumerWidget {
           final enteredData = await showDialog<Map<String, String>>(
             context: context,
             builder: (BuildContext context) {
-              String? className;
-              String? classPlace;
-              String? classNote;
-
-              return AlertDialog(
-                insetPadding: EdgeInsets.zero,
-                title: const Text("授業情報"),
-                content: SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.3,
-                  width: MediaQuery.of(context).size.width * 0.6,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          child: const Text('授業名'),
-                        ),
-                        TextField(
-                          onChanged: (text1) {
-                            className = text1;
-                          },
-                        ),
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          margin: const EdgeInsets.all(5),
-                          child: const Text('教室'),
-                        ),
-                        TextField(
-                          onChanged: (text2) {
-                            classPlace = text2;
-                          },
-                        ),
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          margin: const EdgeInsets.all(5),
-                          child: const Text('メモ'),
-                        ),
-                        Scrollbar(
-                          thickness: 10,
-                          trackVisibility: true,
-                          thumbVisibility: true,
-                          interactive: true,
-                          child: TextField(
-                            keyboardType: TextInputType.multiline,
-                            maxLines: 5,
-                            onChanged: (text3) {
-                              classNote = text3;
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                actions: [
-                  TextButton(
-                    child: const Text("キャンセル"),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                  TextButton(
-                    onPressed: () async {
-                      final enteredData = {
-                        'name': className ?? '',
-                        'place': classPlace ?? '',
-                        'note': classNote ?? '',
-                      };
-                      print(enteredData); // デバッグ情報を追加
-                      Navigator.pop(context, enteredData);
-                    },
-                    child: const Text('保存'),
-                  ),
-                ],
+              return ClassworkInputDialog(
+                classNameController: classNameController,
+                classPlaceController: classPlaceController,
+                classNoteController: classNoteController,
               );
             },
           );
@@ -171,6 +108,15 @@ class ClassworkWidget extends HookConsumerWidget {
                 color: Colors.white,
                 child: Text(
                   classPlaceState.value ?? '',
+                  style: const TextStyle(fontSize: 11),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.only(right: 2, left: 2),
+                margin: const EdgeInsets.only(right: 3, left: 3),
+                color: Colors.white,
+                child: Text(
+                  classNoteState.value ?? '',
                   style: const TextStyle(fontSize: 11),
                 ),
               ),
