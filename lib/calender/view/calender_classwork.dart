@@ -104,13 +104,13 @@ class ClassworkWidget extends HookConsumerWidget {
                 style: const TextStyle(fontSize: 14),
               ),
               Offstage(
-                offstage: classNoteState.value == '',
+                offstage: classPlaceState.value == '',
                 child: Container(
                   padding: const EdgeInsets.only(right: 2, left: 2),
                   margin: const EdgeInsets.only(right: 3, left: 3),
                   color: Colors.white,
                   child: Text(
-                    classNoteState.value ?? '',
+                    classPlaceState.value ?? '',
                     style: const TextStyle(fontSize: 11),
                   ),
                 ),
