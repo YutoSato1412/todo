@@ -3,7 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:todo/calender/veiw_model/calender_repository.dart';
+import 'package:todo/calender/veiw_model/period_repository.dart';
 
 // 左の時限の表示WIdget
 class PeriodWidget extends HookConsumerWidget {
@@ -32,10 +32,11 @@ class PeriodWidget extends HookConsumerWidget {
 
     return Container(
       alignment: Alignment.center,
-      margin: EdgeInsets.zero,
-      padding: EdgeInsets.zero,
+      // margin: EdgeInsets.zero,
+      // padding: EdgeInsets.zero,
       width: MediaQuery.of(context).size.width / 7,
       height: MediaQuery.of(context).size.height * 1.1 / 10,
+      // この上のContainerはclassWorkも同一なのでBuildListItemで統一するべき
       child: Column(
         children: [
           Container(
@@ -46,14 +47,17 @@ class PeriodWidget extends HookConsumerWidget {
                 DateTime? pickedTime = await DatePicker.showTimePicker(
                   context,
                   showTitleActions: true,
-                  showSecondsColumn: false,
+                  showSecondsColumn: false, // 秒の表示をoff
                   onConfirm: (time) {
                     timeState.value = time;
                     final formattedTime =
+                        // 時間・分を2桁固定して表示
                         '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
                     SharedPreferences.getInstance().then((prefs) {
                       prefs.setString(
-                          'startTime$schedulePeriod', formattedTime);
+                          //  'StartTime~限'でローカル保存
+                          'startTime$schedulePeriod',
+                          formattedTime);
                     });
                   },
                   currentTime: DateTime.now(),
