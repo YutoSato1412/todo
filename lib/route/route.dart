@@ -5,8 +5,9 @@ import 'package:todo/todo/view/todo.dart';
 import 'package:todo/calender/view/calender.dart';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>();
-final page1NavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'todo');
-final page2NavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'calendar');
+final todoNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'todo');
+final calendarNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'calendar');
+final scheduleNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'schedule');
 
 final router =
     GoRouter(navigatorKey: rootNavigatorKey, initialLocation: '/todo', routes: [
@@ -18,7 +19,7 @@ final router =
         );
       },
       branches: [
-        StatefulShellBranch(navigatorKey: page1NavigatorKey, routes: [
+        StatefulShellBranch(navigatorKey: todoNavigatorKey, routes: [
           GoRoute(
             path: '/todo',
             name: 'todo',
@@ -26,10 +27,18 @@ final router =
                 const NoTransitionPage(child: Todo()),
           ),
         ]),
-        StatefulShellBranch(navigatorKey: page2NavigatorKey, routes: [
+        StatefulShellBranch(navigatorKey: calendarNavigatorKey, routes: [
           GoRoute(
             path: '/calendar',
             name: 'calendar',
+            pageBuilder: (context, state) =>
+                const NoTransitionPage(child: Todo()),
+          ),
+        ]),
+        StatefulShellBranch(navigatorKey: scheduleNavigatorKey, routes: [
+          GoRoute(
+            path: '/schedule',
+            name: 'schedule',
             pageBuilder: (context, state) =>
                 const NoTransitionPage(child: Calendar()),
           )

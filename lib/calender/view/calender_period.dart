@@ -30,55 +30,69 @@ class PeriodWidget extends HookConsumerWidget {
       return null;
     }, []);
 
+    bool hideStartTime = schedulePeriod == 'オンデマンド';
+
     return Container(
       alignment: Alignment.center,
-      // margin: EdgeInsets.zero,
-      // padding: EdgeInsets.zero,
+      margin: EdgeInsets.zero,
+      padding: EdgeInsets.zero,
       width: MediaQuery.of(context).size.width / 7,
-      height: MediaQuery.of(context).size.height * 1.1 / 10,
+      height: schedulePeriod != 'オンデマンド'
+          ? MediaQuery.of(context).size.height * 1.1 / 10
+          : MediaQuery.of(context).size.height * 1 / 10,
       // この上のContainerはclassWorkも同一なのでBuildListItemで統一するべき
       child: Column(
         children: [
           Container(
-            alignment: Alignment.topCenter,
-            child: GestureDetector(
-              onTap: () async {
-                // 時間選択用のダイアログを表示し、選択された時間をtimeStateに保存
-                DateTime? pickedTime = await DatePicker.showTimePicker(
-                  context,
-                  showTitleActions: true,
-                  showSecondsColumn: false, // 秒の表示をoff
-                  onConfirm: (time) {
-                    timeState.value = time;
-                    final formattedTime =
-                        // 時間・分を2桁固定して表示
-                        '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
-                    SharedPreferences.getInstance().then((prefs) {
-                      prefs.setString(
-                          //  'StartTime~限'でローカル保存
-                          'startTime$schedulePeriod',
-                          formattedTime);
-                    });
+              alignment: Alignment.topCenter,
+              child: Offstage(
+                offstage: hideStartTime,
+                child: GestureDetector(
+                  onTap: () async {
+                    // 時間選択用のダイアログを表示し、選択された時間をtimeStateに保存
+                    DateTime? pickedTime = await DatePicker.showTimePicker(
+                      context,
+                      showTitleActions: true,
+                      showSecondsColumn: false, // 秒の表示をoff
+                      onConfirm: (time) {
+                        timeState.value = time;
+                        final formattedTime =
+                            // 時間・分を2桁固定して表示
+                            '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
+                        SharedPreferences.getInstance().then((prefs) {
+                          prefs.setString(
+                              //  'StartTime~限'でローカル保存
+                              'startTime$schedulePeriod',
+                              formattedTime);
+                        });
+                      },
+                      currentTime: DateTime.now(),
+                    );
+                    if (pickedTime != null) {}
                   },
-                  currentTime: DateTime.now(),
-                );
-                if (pickedTime != null) {}
-              },
-              child: Container(
-                  margin: const EdgeInsets.only(top: 5),
-                  // 選択された時間を表示
-                  child: Text(
-                    '${timeState.value.toLocal().hour.toString().padLeft(2, '0')}:${timeState.value.toLocal().minute.toString().padLeft(2, '0')}',
-                    style: const TextStyle(fontSize: 12),
-                  )),
-            ),
-          ),
+                  child: Container(
+                      margin: const EdgeInsets.only(top: 5),
+                      // 選択された時間を表示
+                      child: Text(
+                        '${timeState.value.toLocal().hour.toString().padLeft(2, '0')}:${timeState.value.toLocal().minute.toString().padLeft(2, '0')}',
+                        style: const TextStyle(fontSize: 12),
+                      )),
+                ),
+              )),
           const Spacer(),
-          Text(
-            // 時限を表示
-            schedulePeriod,
-            style: const TextStyle(fontSize: 20.0),
-          ),
+          schedulePeriod != 'オンデマンド'
+              ? Text(
+                  // 時限を表示
+                  schedulePeriod,
+                  style: const TextStyle(fontSize: 20.0),
+                )
+              : Container(
+                  // 時限を表示
+                  margin: const EdgeInsets.all(5),
+                  child: Text(
+                    schedulePeriod,
+                    style: const TextStyle(fontSize: 15.0),
+                  )),
           const Spacer(),
         ],
       ),
