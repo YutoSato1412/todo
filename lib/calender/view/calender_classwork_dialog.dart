@@ -4,12 +4,14 @@ class ClassworkInputDialog extends StatelessWidget {
   final TextEditingController classNameController;
   final TextEditingController classPlaceController;
   final TextEditingController classNoteController;
+  final bool hidePlace;
 
   const ClassworkInputDialog({
     Key? key,
     required this.classNameController,
     required this.classPlaceController,
     required this.classNoteController,
+    required this.hidePlace,
   }) : super(key: key);
 
   @override
@@ -29,21 +31,21 @@ class ClassworkInputDialog extends StatelessWidget {
               ),
               TextField(
                 controller: classNameController,
-                onChanged: (text) {
-                  classNameController.text = text;
-                },
+                onChanged: (text) {},
               ),
-              Container(
-                alignment: Alignment.centerLeft,
-                margin: const EdgeInsets.all(5),
-                child: const Text('教室'),
-              ),
-              TextField(
-                controller: classPlaceController,
-                onChanged: (text) {
-                  classPlaceController.text = text;
-                },
-              ),
+              Offstage(
+                  offstage: hidePlace,
+                  child: Column(children: [
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      margin: const EdgeInsets.all(5),
+                      child: const Text('教室'),
+                    ),
+                    TextField(
+                      controller: classPlaceController,
+                      onChanged: (text) {},
+                    ),
+                  ])),
               Container(
                 alignment: Alignment.centerLeft,
                 margin: const EdgeInsets.all(5),
@@ -58,9 +60,7 @@ class ClassworkInputDialog extends StatelessWidget {
                   controller: classNoteController,
                   keyboardType: TextInputType.multiline,
                   maxLines: 5,
-                  onChanged: (text) {
-                    classNoteController.text = text;
-                  },
+                  onChanged: (text) {},
                 ),
               ),
             ],

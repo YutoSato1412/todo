@@ -13,58 +13,62 @@ class Calendar extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final deviceHeight = MediaQuery.of(context).size.height;
 
-    const showDebugIcon = true; // ローカルの値を削除するIconの表示の可否
+    const showDebugIcon = false; // Debug用のローカルの値を削除するIconの表示
     final clearFlag =
         useState<bool>(false); // SharedPreferencesの値を削除したことを判定するFlag
 
     List<String> list = ['', '月', '火', '水', '木', '金', '土'];
 
-    return SafeArea(
-        bottom: false,
-        top: false,
-        child: Scaffold(
-            appBar: PreferredSize(
-                preferredSize:
-                    Size.fromHeight(deviceHeight / 20), // Appbarの高さ指定
-                child: AppBar(
-                  centerTitle: true,
-                  title: const Text('時間割'),
-                  backgroundColor: Colors.cyan,
-                  actions: [
-                    Visibility(
-                      visible: showDebugIcon,
-                      child: IconButton(
-                        icon: const Icon(
-                          Icons.delete,
-                        ),
-                        onPressed: () {
-                          clearSharedPreferences(clearFlag);
-                        },
-                      ),
-                    )
-                  ],
-                )),
-            body: SizedBox(
-              // SizedBoxで時間割部分の大きさ指定
-              height: deviceHeight * 14.02 / 20,
-              child: ListView.separated(
-                // 横列の作成
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (BuildContext context, int index) {
-                  return BuildListItem(text: list[index]);
-                },
-                // 縦線の表示
-                separatorBuilder: (BuildContext context, int index) {
-                  return const VerticalDivider(
-                    width: 0,
-                    thickness: 3,
-                    color: Colors.black12,
-                  );
-                },
-                itemCount: list.length,
-              ),
-            )));
+    return Scaffold(
+        appBar: PreferredSize(
+            preferredSize: Size.fromHeight(deviceHeight / 20), // Appbarの高さ指定
+            child: AppBar(
+              centerTitle: true,
+              title: const Text('時間割'),
+              backgroundColor: Colors.cyan,
+              actions: [
+                Visibility(
+                  visible: showDebugIcon,
+                  child: IconButton(
+                    icon: const Icon(
+                      Icons.delete,
+                    ),
+                    onPressed: () {
+                      clearSharedPreferences(clearFlag);
+                    },
+                  ),
+                )
+              ],
+            )),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              (SizedBox(
+                // SizedBoxで時間割部分の大きさ指定
+                height: deviceHeight * 16 / 20,
+                //height: deviceHeight * 14.02 / 20,
+
+                child: ListView.separated(
+                  // 横列の作成
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (BuildContext context, int index) {
+                    return BuildListItem(text: list[index]);
+                  },
+                  // 縦線の表示
+                  separatorBuilder: (BuildContext context, int index) {
+                    return const VerticalDivider(
+                      width: 0,
+                      thickness: 3,
+                      color: Colors.black12,
+                    );
+                  },
+                  itemCount: list.length,
+                ),
+              )),
+            ],
+          ),
+        ));
   }
 }
 
@@ -80,6 +84,7 @@ class BuildListItem extends HookConsumerWidget {
     '4限',
     '5限',
     '6限',
+    'オンデマンド'
   ];
 
   BuildListItem({super.key, required this.text});
@@ -102,7 +107,7 @@ class BuildListItem extends HookConsumerWidget {
                 // 曜日用
                 return Container(
                   alignment: Alignment.center,
-                  height: deviceHeight / 25,
+                  height: deviceHeight / 25, // 曜日部分の大きさ指定
                   child: Text(
                     text,
                     style: const TextStyle(fontSize: 20.0),

@@ -17,7 +17,9 @@ class ClassworkWidget extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final boxSizeW = MediaQuery.of(context).size.width / 7;
-    final boxSizeH = MediaQuery.of(context).size.height * 1.1 / 10;
+    final boxSizeH = schedulePeriod != 'オンデマンド'
+        ? MediaQuery.of(context).size.height * 1.1 / 10
+        : MediaQuery.of(context).size.height * 1 / 10;
     final classNameController = useTextEditingController(text: '');
     final classPlaceController = useTextEditingController(text: '');
     final classNoteController = useTextEditingController(text: '');
@@ -46,8 +48,12 @@ class ClassworkWidget extends HookConsumerWidget {
       return null;
     }, []);
 
+    bool hidePlace = schedulePeriod == 'オンデマンド';
+
     return Container(
       alignment: const Alignment(0.3, -0.5),
+      margin: EdgeInsets.zero,
+      padding: EdgeInsets.zero,
       width: boxSizeW,
       height: boxSizeH,
       child: GestureDetector(
@@ -56,10 +62,12 @@ class ClassworkWidget extends HookConsumerWidget {
           final enteredData = await showDialog<Map<String, String>>(
             context: context,
             builder: (BuildContext context) {
+              // 授業情報を入力するDialog
               return ClassworkInputDialog(
                 classNameController: classNameController,
                 classPlaceController: classPlaceController,
                 classNoteController: classNoteController,
+                hidePlace: hidePlace,
               );
             },
           );
@@ -99,27 +107,22 @@ class ClassworkWidget extends HookConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Text(
-                classNameState.value ?? '', // Stateの値を表示
-                style: const TextStyle(fontSize: 14),
+                classNameState.value ?? '',
+                textAlign: TextAlign.center, // Stateの値を表示
+                style: const TextStyle(fontSize: 12),
               ),
-              Container(
-                padding: const EdgeInsets.only(right: 2, left: 2),
-                margin: const EdgeInsets.only(right: 3, left: 3),
-                color: Colors.white,
-                child: Text(
-                  classPlaceState.value ?? '',
-                  style: const TextStyle(fontSize: 11),
+              Offstage(
+                offstage: classPlaceState.value == '',
+                child: Container(
+                  padding: const EdgeInsets.only(right: 2, left: 2),
+                  margin: const EdgeInsets.only(right: 3, left: 3),
+                  color: Colors.white,
+                  child: Text(
+                    classPlaceState.value ?? '',
+                    style: const TextStyle(fontSize: 11),
+                  ),
                 ),
-              ),
-              Container(
-                padding: const EdgeInsets.only(right: 2, left: 2),
-                margin: const EdgeInsets.only(right: 3, left: 3),
-                color: Colors.white,
-                child: Text(
-                  classNoteState.value ?? '',
-                  style: const TextStyle(fontSize: 11),
-                ),
-              ),
+              )
             ],
           ),
         ),
