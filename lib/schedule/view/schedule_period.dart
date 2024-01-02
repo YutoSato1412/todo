@@ -3,7 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:todo/calender/veiw_model/period_repository.dart';
+import 'package:todo/schedule/veiw_model/period_repository.dart';
 
 // 左の時限の表示WIdget
 class PeriodWidget extends HookConsumerWidget {

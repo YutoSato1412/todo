@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:todo/calender/view/calender_period.dart';
-import 'package:todo/calender/view/calender_classwork.dart';
+import 'package:todo/schedule/view/schedule_period.dart';
+import 'package:todo/schedule/view/schedule_classwork.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // 時間割全体を表すWidget

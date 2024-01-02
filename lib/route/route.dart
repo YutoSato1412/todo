@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:todo/widget/bottom_navigation_bar.dart';
 import 'package:todo/todo/view/todo.dart';
-import 'package:todo/calender/view/calender.dart';
+import 'package:todo/schedule/view/schedule.dart';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>();
 final todoNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'todo');
