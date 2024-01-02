@@ -87,7 +87,7 @@ class PeriodWidget extends HookConsumerWidget {
                   style: const TextStyle(fontSize: 20.0),
                 )
               : Container(
-                  // 時限を表示
+                  // オンデマンド
                   margin: const EdgeInsets.all(5),
                   child: Text(
                     schedulePeriod,

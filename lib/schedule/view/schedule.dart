@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:todo/schedule/view/schedule_period.dart';
 import 'package:todo/schedule/view/schedule_classwork.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:todo/widget/base_appbar.dart';
 
 // 時間割全体を表すWidget
 class Calendar extends HookConsumerWidget {
@@ -20,26 +21,24 @@ class Calendar extends HookConsumerWidget {
     List<String> list = ['', '月', '火', '水', '木', '金', '土'];
 
     return Scaffold(
-        appBar: PreferredSize(
-            preferredSize: Size.fromHeight(deviceHeight / 20), // Appbarの高さ指定
-            child: AppBar(
-              centerTitle: true,
-              title: const Text('時間割'),
-              backgroundColor: Colors.cyan,
-              actions: [
-                Visibility(
-                  visible: showDebugIcon,
-                  child: IconButton(
-                    icon: const Icon(
-                      Icons.delete,
-                    ),
-                    onPressed: () {
-                      clearSharedPreferences(clearFlag);
-                    },
-                  ),
-                )
-              ],
-            )),
+        appBar: BaseAppBar(
+          title: '時間割',
+          appBar: AppBar(),
+          customHeight: deviceHeight * 1 / 20,
+          widgets: [
+            Visibility(
+              visible: showDebugIcon,
+              child: IconButton(
+                icon: const Icon(
+                  Icons.delete,
+                ),
+                onPressed: () {
+                  clearSharedPreferences(clearFlag);
+                },
+              ),
+            )
+          ],
+        ),
         body: SingleChildScrollView(
           child: Column(
             children: [
